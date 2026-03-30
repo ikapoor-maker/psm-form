@@ -338,10 +338,23 @@ async function handleSubmit(){
   const labels=allCt.map(ct=>({add:ct.replace(/[^a-zA-Z0-9_-]/g,'_').toLowerCase()}));
 
   try{
+    const payload = {
+      summary,
+      labels,
+      email: document.getElementById('f-email').value.trim(),
+      changeTypes: allCt.join(', '),
+      campaigns: selCampaigns.map(c=>`${c.company} (ID: ${c.id})`).join('\n'),
+      filtersets: selFs.length ? selFs.map(f=>`${f.name} (ID: ${f.id})`).join('\n') : 'Entire campaign',
+      currentSetting: document.getElementById('f-cur').value.trim(),
+      newSetting: document.getElementById('f-new').value.trim(),
+      startDate: document.getElementById('f-ds').value,
+      endDate: document.getElementById('f-de').value || 'N/A',
+      notes: document.getElementById('f-notes').value.trim() || 'None'
+    };
     const r=await fetch(N8N_WEBHOOK,{
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({summary,commentBody,labels})
+      body:JSON.stringify(payload)
     });
     if(!r.ok)throw new Error('Webhook error: '+r.status);
     const data=await r.json();

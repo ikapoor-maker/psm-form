@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Account Support Request — HealthCare.com</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:linear-gradient(160deg,#1B2B4B 0%,#243758 100%);min-height:100vh;padding:40px 16px}
+  .inner{max-width:660px;margin:0 auto}
+  .header{background:#fff;border-radius:16px;overflow:hidden;margin-bottom:14px;box-shadow:0 4px 24px rgba(0,0,0,.18)}
+  .header-top{background:#1B2B4B;padding:22px 28px 20px;display:flex;align-items:center;gap:14px}
+  .logo-box{width:42px;height:42px;background:#F5A623;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .header-title{color:#fff;font-size:20px;font-weight:700;letter-spacing:-.3px}
+  .header-sub{color:rgba(255,255,255,.65);font-size:12px;margin-top:2px}
+  .header-body{padding:18px 28px;border-bottom:3px solid #F5A623}
+  .header-body h2{font-size:16px;font-weight:700;color:#1B2B4B;margin-bottom:6px}
+  .header-body p{font-size:13px;color:#5a6478;line-height:1.65}
+  .card{background:#fff;border-radius:14px;padding:20px 24px;margin-bottom:12px;border-left:4px solid #F5A623;box-shadow:0 2px 12px rgba(0,0,0,.10)}
+  .card.plain{border-left-color:#dde2ec}
+  .card.error{border-left-color:#e53e3e}
+  .card-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+  @media(max-width:500px){.card-grid{grid-template-columns:1fr}}
+  .lbl{font-size:11px;font-weight:700;color:#1B2B4B;margin-bottom:5px;text-transform:uppercase;letter-spacing:.5px;display:flex;align-items:center;gap:4px}
+  .req{color:#F5A623;font-size:14px}
+  .hint{font-size:12px;color:#8a93a6;margin-bottom:10px;line-height:1.55}
+  .err-msg{font-size:12px;color:#e53e3e;margin-top:6px;display:none;align-items:center;gap:4px}
+  input[type=text],input[type=email],input[type=date],textarea{width:100%;border:none;border-bottom:2px solid #e8eaf0;padding:9px 0;font-size:14px;color:#1B2B4B;background:transparent;outline:none;transition:border-color .15s;font-family:inherit}
+  input:focus,textarea:focus{border-bottom-color:#F5A623}
+  textarea{resize:vertical;min-height:76px}
+  .chk-row{display:flex;align-items:center;gap:10px;font-size:13px;color:#1B2B4B;cursor:pointer;padding:5px 0}
+  .chk-box{width:18px;height:18px;border-radius:5px;border:2px solid #c8cdd8;background:#fff;flex-shrink:0;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .12s}
+  .chk-box.checked{background:#F5A623;border-color:#F5A623}
+  .search-box{width:100%;border:1.5px solid #dde2ec;border-radius:8px;padding:8px 12px;font-size:13px;margin-bottom:8px;outline:none;color:#1B2B4B;font-family:inherit}
+  .search-box:focus{border-color:#F5A623}
+  .list-wrap{max-height:210px;overflow-y:auto;border:1.5px solid #dde2ec;border-radius:10px}
+  .list-item{display:flex;align-items:center;gap:10px;padding:7px 12px;cursor:pointer;font-size:13px;color:#1B2B4B;border-bottom:1px solid #f0f2f7;transition:background .1s}
+  .list-item:last-child{border-bottom:none}
+  .list-item:hover,.list-item.checked{background:#FEF3DC}
+  .sel-count{font-size:12px;color:#F5A623;font-weight:600;margin-top:6px}
+  .sa-row{display:flex;gap:8px;margin-bottom:8px}
+  .sa-btn{background:none;border:1.5px solid #dde2ec;border-radius:6px;padding:3px 10px;font-size:12px;cursor:pointer;color:#5a6478;font-weight:500;font-family:inherit}
+  .sa-btn:hover{border-color:#F5A623;color:#1B2B4B}
+  .empty-list{padding:14px;font-size:13px;color:#aaa;text-align:center}
+  .badge-active{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;background:#e6f9f0;color:#1a7a4a;white-space:nowrap;margin-left:auto}
+  .badge-paused{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600;background:#FEF3DC;color:#a05c00;white-space:nowrap;margin-left:auto}
+  .pill-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px 3px 12px;border-radius:20px;font-size:12px;font-weight:500;background:#1B2B4B;color:#fff}
+  .pill-x{cursor:pointer;background:none;border:none;color:rgba(255,255,255,.7);font-size:14px;line-height:1;padding:0}
+  .warn{font-size:12px;color:#7a4f00;background:#FEF3DC;border:1px solid #FDDFA0;border-radius:8px;padding:8px 12px;margin-bottom:10px}
+  .placeholder{font-size:13px;color:#aaa;font-style:italic;padding:4px 0}
+  .btn-row{display:flex;align-items:center;gap:14px;padding-bottom:40px;margin-top:4px}
+  .btn-submit{background:#F5A623;color:#1B2B4B;border:none;border-radius:10px;padding:12px 28px;font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.2px;box-shadow:0 4px 14px rgba(245,166,35,.4);transition:all .15s;font-family:inherit}
+  .btn-submit:hover{background:#e09610}
+  .btn-submit:disabled{background:#b0b8c9;color:#fff;cursor:not-allowed;box-shadow:none}
+  .btn-clear{background:none;border:none;color:rgba(255,255,255,.65);font-size:13px;cursor:pointer;text-decoration:underline;font-family:inherit}
+  #success-page{display:none;min-height:100vh;background:linear-gradient(160deg,#1B2B4B 0%,#243758 100%);align-items:center;justify-content:center;padding:24px}
+  .s-card{background:#fff;border-radius:20px;padding:48px 36px;text-align:center;max-width:460px;width:100%;box-shadow:0 8px 40px rgba(0,0,0,.25)}
+  .s-check{width:72px;height:72px;border-radius:50%;background:#FEF3DC;border:3px solid #F5A623;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:32px}
+  .s-title{font-size:24px;font-weight:700;color:#1B2B4B;margin-bottom:8px}
+  .s-sub{font-size:13px;color:#5a6478;margin-bottom:16px}
+  .s-key{display:inline-block;background:#FEF3DC;color:#1B2B4B;border:1.5px solid #FDDFA0;border-radius:20px;padding:2px 14px;font-size:13px;font-weight:700;margin-bottom:16px}
+  .s-link{display:inline-block;background:#1B2B4B;color:#fff;padding:12px 24px;border-radius:10px;text-decoration:none;font-size:14px;font-weight:600;margin-bottom:14px}
+  .s-again{background:none;border:none;color:#8a93a6;font-size:13px;cursor:pointer;text-decoration:underline;margin-top:8px;font-family:inherit}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+  .loading-dot{width:8px;height:8px;border-radius:50%;background:#F5A623;animation:pulse 1s infinite;display:inline-block;margin-right:6px}
+</style>
+</head>
+<body>
+
+<div id="form-page">
+<div class="inner">
+  <div class="header">
+    <div class="header-top">
+      <div class="logo-box">
+        <svg width="26" height="26" viewBox="0 0 26 26" fill="none">
+          <rect x="2" y="2" width="22" height="22" rx="4" fill="#1B2B4B"/>
+          <path d="M7 8h4v4H7V8zm0 6h4v4H7v-4zm8-6h4v4h-4V8zm0 6h4v4h-4v-4z" fill="#F5A623"/>
+          <rect x="10" y="11" width="6" height="4" rx="1" fill="white" opacity=".9"/>
+        </svg>
+      </div>
+      <div>
+        <div class="header-title">HealthCare.com</div>
+        <div class="header-sub">Partner &amp; Campaign Management</div>
+      </div>
+    </div>
+    <div class="header-body">
+      <h2>Account Support Request</h2>
+      <p>Submit one form per campaign. For filterset IDs, refer to the filterset worksheet and filter by Partner Name or ID.</p>
+    </div>
+  </div>
+
+  <div class="card" id="card-email">
+    <div class="lbl">Email <span class="req">*</span></div>
+    <input type="email" id="f-email" placeholder="your@healthcare.com"/>
+    <div class="err-msg" id="err-email">⚠ Please enter a valid email.</div>
+  </div>
+
+  <div class="card" id="card-ct">
+    <div class="lbl">What do you need to change? <span class="req">*</span></div>
+    <div id="ct-list" style="display:flex;flex-direction:column;gap:4px;margin-top:4px"></div>
+    <div id="other-wrap" style="display:none;margin-top:10px">
+      <input type="text" id="f-other" placeholder="Please specify"/>
+    </div>
+    <div class="err-msg" id="err-ct">⚠ Select at least one change type.</div>
+  </div>
+
+  <div class="card" id="card-camp">
+    <div class="lbl">Select Campaign(s) <span class="req">*</span></div>
+    <div class="hint">Only select multiple campaigns when they belong to the same Partner and the change is identical. Submit separate requests for different needs.</div>
+    <input class="search-box" id="camp-search" placeholder="Search campaigns by name or ID..."/>
+    <div class="sa-row">
+      <button class="sa-btn" onclick="selectAllCampaigns()">Select all</button>
+      <button class="sa-btn" onclick="clearCampaigns()">Clear</button>
+    </div>
+    <div class="list-wrap" id="camp-list"><div class="empty-list"><span class="loading-dot"></span>Loading campaigns...</div></div>
+    <div class="sel-count" id="camp-count">0 selected</div>
+    <div class="pill-wrap" id="camp-pills"></div>
+    <div class="err-msg" id="err-camp">⚠ Select at least one campaign.</div>
+  </div>
+
+  <div class="card plain">
+    <div class="lbl">Which filterset(s) should be changed?</div>
+    <div class="hint">Skip if the change applies to the entire campaign. If changing schedules on a leads campaign, indicate whether the BTYP filterset should be included.</div>
+    <div id="fs-placeholder" class="placeholder">← Select a campaign above to load its filtersets</div>
+    <div id="fs-loading" style="display:none;font-size:13px;color:#8a93a6;padding:4px 0"><span class="loading-dot"></span>Loading filtersets...</div>
+    <div id="fs-selector" style="display:none">
+      <div class="warn" id="fs-warn" style="display:none">⚠️ Filtersets shown are from the first selected campaign. Verify IDs apply to all selected campaigns.</div>
+      <input class="search-box" id="fs-search" placeholder="Search filtersets..."/>
+      <div class="sa-row">
+        <button class="sa-btn" onclick="selectAllFs()">Select all</button>
+        <button class="sa-btn" onclick="clearFs()">Clear</button>
+      </div>
+      <div class="list-wrap" id="fs-list"></div>
+      <div class="sel-count" id="fs-count">0 selected</div>
+    </div>
+  </div>
+
+  <div class="card" id="card-cur">
+    <div class="lbl">What is the current setting? <span class="req">*</span></div>
+    <input type="text" id="f-cur" placeholder="Describe the current setting"/>
+    <div class="err-msg" id="err-cur">⚠ This field is required.</div>
+  </div>
+
+  <div class="card" id="card-new">
+    <div class="lbl">What should the new setting be? <span class="req">*</span></div>
+    <input type="text" id="f-new" placeholder="Describe the requested change"/>
+    <div class="err-msg" id="err-new">⚠ This field is required.</div>
+  </div>
+
+  <div class="card-grid">
+    <div class="card" id="card-ds" style="margin-bottom:0">
+      <div class="lbl">Start date <span class="req">*</span></div>
+      <input type="date" id="f-ds"/>
+      <div class="err-msg" id="err-ds">⚠ Required.</div>
+    </div>
+    <div class="card plain" style="margin-bottom:0">
+      <div class="lbl">End date <span style="color:#aaa;font-weight:400;text-transform:none;font-size:11px;letter-spacing:0">(if applicable)</span></div>
+      <input type="date" id="f-de"/>
+    </div>
+  </div>
+
+  <div class="card plain" style="margin-top:12px">
+    <div class="lbl">Special instructions or notes</div>
+    <textarea id="f-notes" placeholder="Any additional context for Operations..."></textarea>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-submit" id="btn-submit" onclick="handleSubmit()">Submit Request →</button>
+    <button class="btn-clear" onclick="resetForm()">Clear form</button>
+  </div>
+</div>
+</div>
+
+<div id="success-page">
+  <div class="s-card">
+    <div class="s-check">✅</div>
+    <div class="s-title">Request submitted!</div>
+    <p class="s-sub">Your ticket has been created and assigned to Operations.</p>
+    <div class="s-key" id="s-key"></div><br/>
+    <a id="s-link" href="#" target="_blank" rel="noopener" class="s-link">View ticket in Jira →</a><br/>
+    <button class="s-again" onclick="resetForm()">Submit another request</button>
+  </div>
+</div>
+
+<script>
+const API_KEY   = '8ef95d9f96ce7b82e1440355f4c56b7fb93391f9a320581ab1347086e47e9ea3';
+const N8N_WEBHOOK = 'https://healthcareinc.app.n8n.cloud/webhook/424b14de-3301-4b67-b9cd-4de8d8a7acbf';
+const JIRA_BASE = 'https://healthcareinc.atlassian.net';
+const CHK = `<svg width="10" height="8" viewBox="0 0 10 8"><path d="M1 4l3 3 5-6" stroke="#1B2B4B" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+const CTS = ['Cap Changes','Schedule Changes','State Changes','Bid / Price Changes','Filter Changes','Pause Account','Activate Account','Other'];
+
+let allPartners=[], selCampaigns=[], allFs=[], selFs=[], selCt=[];
+
+(function(){
+  const el=document.getElementById('ct-list');
+  CTS.forEach(ct=>{
+    const row=document.createElement('label');
+    row.className='chk-row';
+    row.innerHTML=`<div class="chk-box" data-ct="${ct}"></div><span>${ct}</span>`;
+    row.querySelector('.chk-box').addEventListener('click',()=>toggleCt(ct));
+    row.querySelector('span').addEventListener('click',()=>toggleCt(ct));
+    el.appendChild(row);
+  });
+})();
+
+function toggleCt(ct){
+  const i=selCt.indexOf(ct);
+  if(i>-1)selCt.splice(i,1);else selCt.push(ct);
+  document.querySelectorAll(`[data-ct="${ct}"]`).forEach(el=>{
+    el.classList.toggle('checked',selCt.includes(ct));
+    el.innerHTML=selCt.includes(ct)?CHK:'';
+  });
+  if(ct==='Other')document.getElementById('other-wrap').style.display=selCt.includes('Other')?'block':'none';
+}
+
+(async function(){
+  try{
+    const r=await fetch(`https://leads.healthcare.com/new_api/api.php?Key=${API_KEY}&API_Action=getPartnerList&Format=JSON`);
+    const d=await r.json();
+    let l=d?.response?.partners?.partner||[];
+    if(!Array.isArray(l))l=[l];
+    allPartners=l.filter(p=>['Active','Temporarily Stopped'].includes(p.status)).sort((a,b)=>(a.company||'').localeCompare(b.company||''));
+    renderCampaigns(allPartners);
+  }catch(e){
+    document.getElementById('camp-list').innerHTML='<div class="empty-list">Failed to load campaigns</div>';
+  }
+})();
+
+function renderCampaigns(list){
+  const el=document.getElementById('camp-list');
+  if(!list.length){el.innerHTML='<div class="empty-list">No results</div>';return;}
+  el.innerHTML=list.map(p=>{
+    const chk=selCampaigns.find(x=>x.id===p.id);
+    const badge=p.status==='Active'?'<span class="badge-active">Active</span>':'<span class="badge-paused">⏸ Paused</span>';
+    return `<div class="list-item${chk?' checked':''}" onclick="toggleCampaign('${p.id}')">
+      <div class="chk-box${chk?' checked':''}">${chk?CHK:''}</div>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.company}</span>${badge}</div>`;
+  }).join('');
+  updateCampCount();
+}
+
+function toggleCampaign(id){
+  const p=allPartners.find(x=>x.id===id);
+  const i=selCampaigns.findIndex(x=>x.id===id);
+  if(i>-1)selCampaigns.splice(i,1);else selCampaigns.push(p);
+  renderCampaigns(filterArr(allPartners,document.getElementById('camp-search').value));
+  updateCampPills();loadFiltersets();
+}
+function filterArr(arr,q){q=q.toLowerCase();return q?arr.filter(p=>(p.company||'').toLowerCase().includes(q)||p.id.includes(q)):arr;}
+function selectAllCampaigns(){filterArr(allPartners,document.getElementById('camp-search').value).forEach(p=>{if(!selCampaigns.find(x=>x.id===p.id))selCampaigns.push(p);});renderCampaigns(filterArr(allPartners,document.getElementById('camp-search').value));updateCampPills();loadFiltersets();}
+function clearCampaigns(){selCampaigns=[];renderCampaigns(filterArr(allPartners,document.getElementById('camp-search').value));updateCampPills();loadFiltersets();}
+function updateCampCount(){document.getElementById('camp-count').textContent=selCampaigns.length+' selected';}
+function updateCampPills(){updateCampCount();document.getElementById('camp-pills').innerHTML=selCampaigns.map(p=>`<span class="pill">${p.company}<button class="pill-x" onclick="toggleCampaign('${p.id}')">×</button></span>`).join('');}
+document.getElementById('camp-search').addEventListener('input',function(){renderCampaigns(filterArr(allPartners,this.value));});
+
+async function loadFiltersets(){
+  const ph=document.getElementById('fs-placeholder'),ld=document.getElementById('fs-loading'),sel=document.getElementById('fs-selector');
+  if(!selCampaigns.length){ph.style.display='block';ld.style.display='none';sel.style.display='none';selFs=[];return;}
+  ph.style.display='none';ld.style.display='block';sel.style.display='none';selFs=[];
+  document.getElementById('fs-warn').style.display=selCampaigns.length>1?'block':'none';
+  try{
+    const r=await fetch(`https://leads.healthcare.com/new_api/api.php?Key=${API_KEY}&API_Action=getFilterSets&Partner_ID=${selCampaigns[0].id}&Format=JSON`);
+    const d=await r.json();
+    let sets=d?.response?.filter_sets?.set||[];
+    if(!Array.isArray(sets))sets=[sets];
+    allFs=sets.sort((a,b)=>(a.name||'').localeCompare(b.name||''));
+    renderFs(allFs);ld.style.display='none';sel.style.display='block';
+  }catch(e){ld.style.display='none';ph.style.display='block';ph.textContent='Failed to load filtersets.';}
+}
+
+function renderFs(list){
+  const el=document.getElementById('fs-list');
+  if(!list.length){el.innerHTML='<div class="empty-list">No filtersets found</div>';return;}
+  el.innerHTML=list.map(f=>{
+    const chk=selFs.find(x=>String(x.id)===String(f.id));
+    const badge=f.status==='Active'?'<span class="badge-active">Active</span>':`<span class="badge-paused">${f.status}</span>`;
+    return `<div class="list-item${chk?' checked':''}" onclick="toggleFs('${f.id}')">
+      <div class="chk-box${chk?' checked':''}">${chk?CHK:''}</div>
+      <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${f.name}</span>${badge}</div>`;
+  }).join('');
+  updateFsCount();
+}
+function toggleFs(id){const f=allFs.find(x=>String(x.id)===String(id));const i=selFs.findIndex(x=>String(x.id)===String(id));if(i>-1)selFs.splice(i,1);else selFs.push(f);renderFs(filterFs(document.getElementById('fs-search').value));}
+function filterFs(q){q=q.toLowerCase();return q?allFs.filter(f=>(f.name||'').toLowerCase().includes(q)||String(f.id).includes(q)):allFs;}
+function selectAllFs(){allFs.forEach(f=>{if(!selFs.find(x=>x.id===f.id))selFs.push(f);});renderFs(filterFs(document.getElementById('fs-search').value));}
+function clearFs(){selFs=[];renderFs(filterFs(document.getElementById('fs-search').value));}
+function updateFsCount(){document.getElementById('fs-count').textContent=selFs.length+' selected';}
+document.getElementById('fs-search').addEventListener('input',function(){renderFs(filterFs(this.value));});
+
+const cardMap={'err-email':'card-email','err-ct':'card-ct','err-camp':'card-camp','err-cur':'card-cur','err-new':'card-new','err-ds':'card-ds'};
+function validate(){
+  let ok=true;
+  Object.keys(cardMap).forEach(id=>{
+    const e=document.getElementById(id);if(e)e.style.display='none';
+    const c=document.getElementById(cardMap[id]);if(c)c.classList.remove('error');
+  });
+  function fail(id){const e=document.getElementById(id);if(e)e.style.display='flex';const c=document.getElementById(cardMap[id]);if(c)c.classList.add('error');ok=false;}
+  if(!/\S+@\S+\.\S+/.test(document.getElementById('f-email').value.trim()))fail('err-email');
+  if(!selCt.length)fail('err-ct');
+  if(!selCampaigns.length)fail('err-camp');
+  if(!document.getElementById('f-cur').value.trim())fail('err-cur');
+  if(!document.getElementById('f-new').value.trim())fail('err-new');
+  if(!document.getElementById('f-ds').value)fail('err-ds');
+  return ok;
+}
+
+async function handleSubmit(){
+  if(!validate()){document.querySelector('.error')?.scrollIntoView({behavior:'smooth',block:'center'});return;}
+  const btn=document.getElementById('btn-submit');
+  btn.disabled=true;btn.textContent='Creating ticket...';
+
+  const allCt=selCt.map(ct=>ct==='Other'&&document.getElementById('f-other').value.trim()?'Other: '+document.getElementById('f-other').value.trim():ct);
+  const primary=selCampaigns[0]?.company||'Unknown';
+  const multi=selCampaigns.length>1?` (+${selCampaigns.length-1} more)`:'';
+  const summary=`[Campaign Change] ${primary}${multi} — ${allCt.join(', ')}`;
+
+  const mkRow=(label,val)=>({type:'tableRow',content:[
+    {type:'tableCell',content:[{type:'paragraph',content:[{type:'text',text:label,marks:[{type:'strong'}]}]}]},
+    {type:'tableCell',content:[{type:'paragraph',content:[{type:'text',text:val||'—'}]}]}
+  ]});
+
+  const commentBody={version:1,type:'doc',content:[
+    {type:'heading',attrs:{level:3},content:[{type:'text',text:'Campaign Change Request Details'}]},
+    {type:'table',attrs:{isNumberColumnEnabled:false,layout:'default'},content:[
+      mkRow('Submitted by',document.getElementById('f-email').value.trim()),
+      mkRow('Change type(s)',allCt.join(', ')),
+      mkRow('Campaign(s)',selCampaigns.map(c=>`${c.company} (ID: ${c.id})`).join('\n')),
+      mkRow('Filterset(s)',selFs.length?selFs.map(f=>`${f.name} (ID: ${f.id})`).join('\n'):'Entire campaign'),
+      mkRow('Current setting',document.getElementById('f-cur').value.trim()),
+      mkRow('New setting',document.getElementById('f-new').value.trim()),
+      mkRow('Start date',document.getElementById('f-ds').value),
+      mkRow('End date',document.getElementById('f-de').value||'N/A'),
+      mkRow('Notes',document.getElementById('f-notes').value.trim()||'None'),
+    ]}
+  ]};
+
+  const labels=allCt.map(ct=>({add:ct.replace(/[^a-zA-Z0-9_-]/g,'_').toLowerCase()}));
+
+  try{
+    const r=await fetch(N8N_WEBHOOK,{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({summary,commentBody,labels})
+    });
+    if(!r.ok)throw new Error('Webhook error: '+r.status);
+    const data=await r.json();
+    const key=data.issueKey;
+    document.getElementById('s-key').textContent=key;
+    document.getElementById('s-link').href=JIRA_BASE+'/browse/'+key;
+    document.getElementById('form-page').style.display='none';
+    document.getElementById('success-page').style.display='flex';
+  }catch(err){
+    alert('Error: '+err.message);
+  }finally{
+    btn.disabled=false;btn.textContent='Submit Request →';
+  }
+}
+
+function resetForm(){
+  selCt=[];selCampaigns=[];selFs=[];
+  ['f-email','f-other','f-cur','f-new','f-ds','f-de','f-notes'].forEach(id=>document.getElementById(id).value='');
+  document.querySelectorAll('.chk-box').forEach(el=>{el.classList.remove('checked');el.innerHTML='';});
+  document.getElementById('other-wrap').style.display='none';
+  document.getElementById('camp-pills').innerHTML='';
+  updateCampCount();updateFsCount();
+  renderCampaigns(allPartners);
+  document.getElementById('fs-placeholder').style.display='block';
+  document.getElementById('fs-selector').style.display='none';
+  document.getElementById('form-page').style.display='block';
+  document.getElementById('success-page').style.display='none';
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
